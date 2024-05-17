@@ -46,6 +46,21 @@ exports.getVendorRequests = catchAsyncError(async (req, res, next) => {
   });
 });
 
+exports.getVendors = catchAsyncError(async (req, res, next) => {
+  const allVendors = await User.find({ role: "vendor" });
+  if (!allVendors.length) {
+    return next(new ErrorHandler("No vendors found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Vendors fetched successfully",
+    data: {
+      users: allVendors,
+    },
+  });
+});
+
 exports.updateUserRole = catchAsyncError(async (req, res, next) => {
   const userId = req.params.id;
   const user = await User.findById(userId);

@@ -13,6 +13,10 @@ adminRouter
   .get(verifyAuth, isAdmin, adminRoutes.getVendorRequests);
 
 adminRouter
+  .route("/getVendors")
+  .get(verifyAuth, isAdmin, adminRoutes.getVendors);
+
+adminRouter
   .route("/updateUserRole/:id")
   .post(verifyAuth, isAdmin, adminRoutes.updateUserRole);
 

@@ -32,7 +32,7 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
     if (!saved) {
       return next(new ErrorHandler("Trouble creating a new product", 400));
     }
-    const userUpdateField = saved.status === "myProducts";
+    const userUpdateField = saved.status === "" ? "" : "myProducts";
 
     await User.findByIdAndUpdate(req.userData.user.id, {
       $push: { [userUpdateField]: saved._id },
@@ -174,7 +174,7 @@ exports.myProducts = catchAsyncError(async (req, res, next) => {
     if (!user) {
       return next(new ErrorHandler("User not found", 404));
     }
-    const myProductIds = user.publicProducts;
+    const myProductIds = user.myProducts;
     const products = await Product.find({
       _id: { $in: myProductIds },
       productStatus: "available",
@@ -198,7 +198,7 @@ exports.myProducts = catchAsyncError(async (req, res, next) => {
 
 exports.allProducts = catchAsyncError(async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate("userId", "shopAddress");
 
     console.log(products);
 
@@ -213,6 +213,33 @@ exports.allProducts = catchAsyncError(async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error in fetching products:", error);
+    return next(
+      new ErrorHandler(error.message, error.statusCode || error.code)
+    );
+  }
+});
+
+exports.getProductDetails = catchAsyncError(async (req, res, next) => {
+  const productId = req.params.id;
+
+  try {
+    const product = await Product.findById(productId).populate(
+      "userId",
+      "shopAddress username email phone"
+    );
+    console.log("product details:", product);
+
+    if (!product) {
+      return next(new ErrorHandler("Product not found", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Product details fetched successfully",
+      product,
+    });
+  } catch (error) {
+    console.error("Error in fetching product details:", error);
     return next(
       new ErrorHandler(error.message, error.statusCode || error.code)
     );

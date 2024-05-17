@@ -20,10 +20,10 @@ productRouter
   .route("/searchProduct")
   .get(verifyAuth, productRoutes.searchProduct);
 
-productRouter
-  .route("/myPublicProducts")
-  .get(verifyAuth, productRoutes.myProducts);
+productRouter.route("/myProducts").get(verifyAuth, productRoutes.myProducts);
 
 productRouter.route("/allProducts").get(productRoutes.allProducts);
+
+productRouter.route("/productDetails/:id").get(productRoutes.getProductDetails);
 
 module.exports = productRouter;

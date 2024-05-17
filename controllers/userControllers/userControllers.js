@@ -187,3 +187,25 @@ exports.completeOrder = catchAsyncError(async (req, res, next) => {
     );
   }
 });
+
+exports.getUser = catchAsyncError(async (req, res, next) => {
+  const id = req.params.id;
+  const user = await User.findById(id);
+
+  if (!user) {
+    return next(new ErrorHandler("No user found", 404));
+  }
+
+  if (user.accountStatus !== "active") {
+    return next(new ErrorHandler("User is not active", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "User fetched successfully",
+    data: {
+      user,
+      address: user.shopAddress,
+    },
+  });
+});

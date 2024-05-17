@@ -23,6 +23,11 @@ modal = {
     required: [true, "Email is a required field"],
     unique: [true, "Email must be unique"],
   },
+  phone: {
+    type: String,
+    required: [true, "Phone is a required field"],
+    default: "0300000000",
+  },
   password: {
     type: String,
     required: [true, "Password is a required field"],

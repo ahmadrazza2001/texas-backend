@@ -15,4 +15,6 @@ userRouter
   .route("/completeOrder/:id")
   .post(verifyAuth, userRoutes.completeOrder);
 
+userRouter.route("/getUser/:id").get(userRoutes.getUser);
+
 module.exports = userRouter;
