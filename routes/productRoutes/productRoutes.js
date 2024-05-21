@@ -16,9 +16,7 @@ productRouter
   .route("/deleteProduct/:id")
   .patch(verifyAuth, isVendor, productRoutes.deleteProduct);
 
-productRouter
-  .route("/searchProduct")
-  .get(verifyAuth, productRoutes.searchProduct);
+productRouter.route("/search").get(productRoutes.searchProduct);
 
 productRouter.route("/myProducts").get(verifyAuth, productRoutes.myProducts);
 

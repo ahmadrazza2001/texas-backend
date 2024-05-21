@@ -143,12 +143,14 @@ exports.deleteProduct = catchAsyncError(async (req, res, next) => {
 });
 //search product
 exports.searchProduct = catchAsyncError(async (req, res, next) => {
-  const productType = req.query.productType; // Assuming productType is provided in the query parameter
+  const keywords = req.query.keywords;
+  const keywordsArray = keywords.split(",").map((word) => word.trim());
+
   try {
     let products = await Product.find({
-      productType: productType,
+      keywords: { $in: keywordsArray },
       productStatus: "available",
-    }).populate("userId", ["username", "firstName", "lastName"]);
+    }).populate("userId", ["username", "firstName", "lastName", "shopAddress"]);
 
     if (products.length === 0) {
       return next(new ErrorHandler("Products not found!", 404));
